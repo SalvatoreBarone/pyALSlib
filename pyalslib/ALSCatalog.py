@@ -26,11 +26,11 @@ class ALSCatalog:
         self.__solver = solver
         ALSCatalogCache(self.__cache_file).init()
 
-    def generate_catalog(self, luts_set, es_timeout):
+    def generate_catalog(self, luts_set, es_timeout, ncpus):
         random.shuffle(luts_set)
         luts_sets = list_partitioning(luts_set, cpu_count())
         args = [ [self.__cache_file, lut_set, es_timeout, self.__solver] for lut_set in luts_sets ]
-        with Pool(cpu_count()) as pool:
+        with Pool(ncpus) as pool:
             catalog = pool.starmap(generate_catalog, args)
         catalog = [ item for sublist in catalog for item in sublist ]
         return catalog
