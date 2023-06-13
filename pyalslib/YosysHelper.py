@@ -199,7 +199,7 @@ class YosysHelper:
         check_for_file(source_file)
         name, extension = os.path.splitext(source_file)
         if extension == ".vhd":
-            ys.run_pass(f"ghdl {sources} -e {top_module}", ys_design)
+            ys.run_pass(f"ghdl {source_file} -e {top_module}", ys_design)
         elif extension == ".sv":
             ys.run_pass(f"read_verilog -sv {source_file}", ys_design)
         elif extension == ".v":
