@@ -60,10 +60,10 @@ class YosysHelper:
         self.top_module = top_module
         if isinstance(self.sources, (list, tuple)):
             for s in self.sources:
-                YosysHelper.read_single_source(s, self.design)
+                YosysHelper.read_single_source(s, top_module, self.design)
                 print(f"{s} read successfully")
         else:
-            YosysHelper.read_single_source(self.sources, self.design)
+            YosysHelper.read_single_source(self.sources, top_module, self.design)
             print(f"{self.sources} read successfully")
         ys.run_pass(f"hierarchy -check -top {self.top_module}", self.design)
         self.module_id = ys.IdString(f"\\{self.top_module}")
@@ -195,11 +195,11 @@ class YosysHelper:
         return None
 
     @staticmethod
-    def read_single_source(source_file, ys_design):
+    def read_single_source(source_file, top_module, ys_design):
         check_for_file(source_file)
         name, extension = os.path.splitext(source_file)
         if extension == ".vhd":
-            ys.run_pass(f"ghdl -a {source_file}", ys_design)
+            ys.run_pass(f"ghdl {sources} -e {top_module}", ys_design)
         elif extension == ".sv":
             ys.run_pass(f"read_verilog -sv {source_file}", ys_design)
         elif extension == ".v":
