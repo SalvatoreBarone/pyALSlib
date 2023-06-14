@@ -113,11 +113,16 @@ class ALSGraph:
                     lut_io_info[cell["name"]] = {"spec": cell["spec"], "freq" : [0] * len(cell["spec"])}       
                 lut_io_info[cell["name"]]["freq"][out_idx] += 1
             else:
-                cell_conf = configuration[cell["name"]]
-                if cell["name"] not in lut_io_info:
-                    lut_io_info[cell["name"]] = {"spec": cell_conf["axspec"], "freq" : [0] * len(cell["spec"])}       
-                lut_io_info[cell["name"]]["freq"][out_idx] += 1
-                cell_values[cell] = cell_conf["axspec"][out_idx] == "1"
+                if cell["name"] == "Constant 0":
+                    cell_values[cell] = False
+                elif cell["name"] == "Constant 1":
+                    cell_values[cell] = True
+                else:
+                    cell_conf = configuration[cell["name"]]
+                    if cell["name"] not in lut_io_info:
+                        lut_io_info[cell["name"]] = {"spec": cell_conf["axspec"], "freq" : [0] * len(cell["spec"])}       
+                    lut_io_info[cell["name"]]["freq"][out_idx] += 1
+                    cell_values[cell] = cell_conf["axspec"][out_idx] == "1"
         return cell_values[cell], lut_io_info
 
 
