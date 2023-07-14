@@ -28,6 +28,11 @@ class ALSRewriter:
 
     def rewrite_and_save(self, design_name, solution, destination):
         configuration = self.problem.matter_configuration(solution)
+        self.rewrite_and_save_configured(design_name, configuration, destination)
+
+    def rewrite_and_save_configured(self, design_name, configuration, destination):
+        self.helper.reset()
+        self.helper.delete()
         self.helper.load_design(design_name)
         self.helper.to_aig(configuration)
         self.helper.reverse_splitnets()
@@ -37,13 +42,5 @@ class ALSRewriter:
         self.helper.reset()
         self.helper.delete()
 
-    def rewrite_and_save_configured(self, design_name, configuration, destination):
-        self.helper.load_design(design_name)
-        self.helper.to_aig(configuration)
-        self.helper.reverse_splitnets()
-        self.helper.clean()
-        self.helper.opt()
-        self.helper.write_verilog(destination)
-        self.helper.reset()
-        self.helper.delete()
+        
     
