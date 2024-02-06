@@ -16,6 +16,7 @@ Street, Fifth Floor, Boston, MA 02110-1301, USA.
 """
 import os, copy
 from pyosys import libyosys as ys
+from liberty.parser import parse_liberty
 from .Utility import *
 
 
@@ -39,6 +40,9 @@ class YosysHelper:
         self.module_id = None
         self.PIs = None
         self.POs = None
+        self.liberty_file = None
+        self.library_cells_area = None
+        self.library_cells_power = None
 
     def __deepcopy__(self, memo = None):
         helper = YosysHelper()
@@ -49,6 +53,13 @@ class YosysHelper:
         helper.PIs = copy.deepcopy(self.PIs)
         helper.POs = copy.deepcopy(self.POs)
         return helper
+    
+    def load_liberty(self, file_name):
+        self.liberty_file = file_name
+        library = parse_liberty(open(self.liberty_file).read())
+        self.library_cells_area = {cell_group.args[0]: float(cell_group['area']) for cell_group in library.get_groups('cell')}
+        self.library_cells_power = { cell_group.args[0] : float(cell_group['cell_leakage_power'] if cell_group['cell_leakage_power'] is not None else cell_group['drive_strength'] ) for cell_group in library.get_groups('cell') }
+        print(f"{file_name} loaded successfully")
 
     def load_ghdl(self):
         ys.run_pass("plugin -i ghdl", self.design)
@@ -80,11 +91,8 @@ class YosysHelper:
         ys.run_pass(f"tee -q ghdl {sources} -e {self.top_module}", self.design)
         ys.run_pass(f"hierarchy -check -top {self.top_module}", self.design)
 
-
     def prep_design(self, cut_size):
-        ys.run_pass(
-            f"prep; flatten; splitnets -ports; synth -top {self.top_module}; flatten; clean -purge; synth -lut {str(cut_size)}",
-            self.design)
+        ys.run_pass(f"prep; flatten; splitnets -ports; synth -top {self.top_module}; flatten; clean -purge; synth -lut {str(cut_size)}", self.design)
         print(f"{cut_size}-LUT mapping performed successfully")
 
     def clean(self):
@@ -107,6 +115,14 @@ class YosysHelper:
 
     def show(self):
         ys.run_pass("show", self.design)
+        
+    def synth_to_liberty(self):
+        assert self.liberty_file is not None, "You must load a liberty file first!"
+        print(f"Synthesizing {self.top_module}...")
+        ys.run_pass(f"tee -q synth -flatten -top {self.top_module}; tee -q clean -purge; tee -q read_liberty -lib {self.liberty_file}; tee -q abc -liberty {self.liberty_file};", self.design)
+        area = sum([self.library_cells_area[cell.type.str()[1:]] for module in self.design.selected_whole_modules_warn() for cell in module.selected_cells()])
+        power = sum([self.library_cells_power[cell.type.str()[1:]] for module in self.design.selected_whole_modules_warn() for cell in module.selected_cells()])
+        return area, power
 
     def write_verilog(self, file_name):
         if not file_name.endswith(".v"):

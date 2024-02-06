@@ -12,7 +12,7 @@ with open(path.join(here, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="pyalslib",
-    version="1.1.4",
+    version="1.2.0",
     description="Python implementation of the Catalog-based Aig-rewriting Approximate Logic Synthesis approximation technique",
     long_description="Python implementation of the Catalog-based Aig-rewriting Approximate Logic Synthesis approximation technique. Please visit https://github.com/SalvatoreBarone/pyALSlib",
     url="https://github.com/SalvatoreBarone/pyALSlib",
@@ -32,7 +32,7 @@ setup(
     keywords="Catalog-based Aig-rewriting Approximate Logic Synthesis approximation technique",
     packages=["pyalslib"],
     include_package_data=True,
-    install_requires=["igraph", "z3-solver", "pyboolector", "python-igraph", "numpy"],
+    install_requires=["igraph", "z3-solver", "pyboolector", "python-igraph", "numpy", "liberty-parser"],
     project_urls={
         "Bug Reports": "https://github.com/SalvatoreBarone/pyALSlib/issues",
         "Source": "https://github.com/SalvatoreBarone/pyALSlib",
