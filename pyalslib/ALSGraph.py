@@ -244,8 +244,7 @@ class ALSGraph:
         self.__graph.vs[-1]["type"] = ALSGraph.VertexType.CELL
         name = cell.name.str()
         self.__graph.vs[-1]["name"] = name
-        self.__graph.vs[-1]["hash"] = cell.name.hash()
-        self.__graph.vs[-1]["spec"] = cell.parameters[ys.IdString("\LUT")].as_string()[::-1]
+        self.__graph.vs[-1]["spec"] = cell.parameters[ys.IdString("\LUT")].as_string("")[::-1]
         self.__graph.vs[-1]["in"] = []
         self.__graph.vs[-1]["color"] = "mediumspringgreen"
         name = name[name.rfind("$"):]
@@ -266,7 +265,6 @@ class ALSGraph:
         self.__graph.add_vertex()
         self.__graph.vs[-1]["type"] = ALSGraph.VertexType.PRIMARY_INPUT
         self.__graph.vs[-1]["name"] = wire.name.str()
-        self.__graph.vs[-1]["hash"] = wire.name.hash()
         self.__graph.vs[-1]["spec"] = None
         self.__graph.vs[-1]["in"] = []
         self.__graph.vs[-1]["color"] = "grey"
@@ -279,7 +277,6 @@ class ALSGraph:
         self.__graph.add_vertex()
         self.__graph.vs[-1]["type"] = ALSGraph.VertexType.CONSTANT_ONE
         self.__graph.vs[-1]["name"] = "Constant 1"
-        self.__graph.vs[-1]["hash"] = None
         self.__graph.vs[-1]["spec"] = None
         self.__graph.vs[-1]["in"] = []
         self.__graph.vs[-1]["color"] = "red"
@@ -292,7 +289,6 @@ class ALSGraph:
         self.__graph.add_vertex()
         self.__graph.vs[-1]["type"] = ALSGraph.VertexType.CONSTANT_ZERO
         self.__graph.vs[-1]["name"] = "Constant 0"
-        self.__graph.vs[-1]["hash"] = None
         self.__graph.vs[-1]["spec"] = None
         self.__graph.vs[-1]["in"] = []
         self.__graph.vs[-1]["color"] = "red"
@@ -306,7 +302,6 @@ class ALSGraph:
         self.__graph.add_vertex()
         self.__graph.vs[-1]["type"] = ALSGraph.VertexType.PRIMARY_OUTPUT
         self.__graph.vs[-1]["name"] = wire.name.str()
-        self.__graph.vs[-1]["hash"] = wire.name.hash()
         self.__graph.vs[-1]["spec"] = None
         self.__graph.vs[-1]["in"] = []
         self.__graph.vs[-1]["color"] = "whitesmoke"

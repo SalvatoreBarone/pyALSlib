@@ -12,7 +12,7 @@ with open(path.join(here, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="pyalslib",
-    version="1.2.0",
+    version="1.3.0",
     description="Python implementation of the Catalog-based Aig-rewriting Approximate Logic Synthesis approximation technique",
     long_description="Python implementation of the Catalog-based Aig-rewriting Approximate Logic Synthesis approximation technique. Please visit https://github.com/SalvatoreBarone/pyALSlib",
     url="https://github.com/SalvatoreBarone/pyALSlib",
@@ -27,7 +27,7 @@ setup(
         "Topic :: Software Development :: Embedded Systems",
         "Topic :: System :: Hardware",
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
-        "Programming Language :: Python :: 3.9"
+        "Programming Language :: Python :: 3.12"
     ],
     keywords="Catalog-based Aig-rewriting Approximate Logic Synthesis approximation technique",
     packages=["pyalslib"],
